@@ -126,22 +126,22 @@ suspend fun getComments(client: OkHttpClient, id: Long): List<Comment> =
 private val gson = Gson()
 private val BASE_URL = "http://127.0.0.1:9999"
 private val client = OkHttpClient.Builder()
-/*    .addInterceptor(HttpLoggingInterceptor(::println).apply {
+    .addInterceptor(HttpLoggingInterceptor(::println).apply {
         level = HttpLoggingInterceptor.Level.BODY
-    })*/
+    })
     .connectTimeout(30, TimeUnit.SECONDS)
     .build()
 
 fun main() {
-
 
     with(CoroutineScope(EmptyCoroutineContext)) {
         launch {
             try {
                 val postsWithComments = getPosts(client).map { post ->
                     async {
-                        val author = async { getAuthor(client, post.authorId) }.await()
-                        PostWithComments(post, author, getComments(client, post.id))
+                     /*   val author = async { getAuthor(client, post.authorId) }.await()
+                        PostWithComments(post, author, getComments(client, post.id))*/
+                        PostWithComments(post, getAuthor(client,post.authorId), getComments(client,post.id00))
                     }
                 }.awaitAll()
                 println(postsWithComments)
